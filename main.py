@@ -1,34 +1,21 @@
-import discord
-from discord.ext import commands
-import os, random
-import requests
+from flask import Flask
+import random
 
-intents = discord.Intents.default()
-intents.message_content = True
+app = Flask(__name__)
 
-bot = commands.Bot(command_prefix='$', intents=intents)
+gercekler = [
+"Teknolojik bağımlılıktan mustarip olan çoğu kişi, kendilerini şebeke kapsama alanı dışında bulduklarında veya cihazlarını kullanamadıkları zaman yoğun stres yaşarlar.",
+"2018 yılında yapılan bir araştırmaya göre 18-34 yaş arası kişilerin %50'den fazlası kendilerini akıllı telefonlarına bağımlı olarak görüyor.",
+"Teknolojik bağımlılık çalışması, modern bilimsel araştırmanın en ilgili alanlarından biridir.",
+"2019'da yapılan bir araştırmaya göre, insanların %60'ından fazlası akıllı telefonlarındaki iş mesajlarına işten ayrıldıktan sonraki 15 dakika içinde yanıt veriyor.",
+"Teknolojik bağımlılıkla mücadele etmenin bir yolu, zevk veren ve ruh halini iyileştiren faaliyetler aramaktır.",
+"Elon Musk, sosyal ağların içeriği görüntülemek için mümkün olduğunca fazla zaman harcamamız için bizi platformun içinde tutmak üzere tasarlandığını iddia ediyor.",
+"Elon Musk ayrıca sosyal ağların düzenlenmesini ve kullanıcıların kişisel verilerinin korunmasını savunmaktadır. Sosyal ağların hakkımızda büyük miktarda bilgi topladığını ve bu bilgilerin daha sonra düşüncelerimizi ve davranışlarımızı manipüle etmek için kullanılabileceğini iddia ediyor.",
+"Sosyal ağların olumlu ve olumsuz yanları vardır ve bu platformları kullanırken her ikisinin de farkında olmalıyız."
+]
 
-@bot.event
-async def on_ready():
-    print(f'We have logged in as {bot.user}')
+@app.route("/")
+def gercekler():
+    return f'<p>{random.choice(gercekler)}</p>'
 
-def get_duck_image_url():
-    url = 'https://random-d.uk/api/random'
-    res = requests.get(url)
-    data = res.json()
-    return data['url']
-
-@bot.command('duck')
-async def duck(ctx):
-    '''duck komutunu çağırdığımızda, program get_duck_image_url fonksiyonunu çağırır'''
-    image_url = get_duck_image_url()
-    await ctx.send(image_url)
-
-@bot.command()
-async def mem(ctx):
-    img_name = random.choice(os.listdir('images'))
-    with open(f'images/{img_name}', 'rb') as f:
-        picture = discord.File(f)
- 
-    await ctx.send(file=picture)
-bot.run("")
+app.run(debug=True)
